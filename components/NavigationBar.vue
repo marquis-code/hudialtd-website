@@ -211,6 +211,7 @@
 </template>
 
 <script setup lang="ts">
+const router = useRouter()
 interface NavItem {
   name: string
   id: string
@@ -231,12 +232,16 @@ const navItems: NavItem[] = [
 
 // Methods
 const scrollToSection = (sectionId: string) => {
-  const element = document.getElementById(sectionId)
+    const element = document.getElementById(sectionId)
+  if(sectionId === 'portfolio'){
+    router.push('/success-stories')
+  } else {
   if (element) {
     element.scrollIntoView({ 
       behavior: 'smooth',
       block: 'start'
     })
+  }
   }
 }
 
