@@ -212,6 +212,8 @@
 
 <script setup lang="ts">
 const router = useRouter()
+const route = useRoute()
+
 interface NavItem {
   name: string
   id: string
@@ -232,16 +234,38 @@ const navItems: NavItem[] = [
 
 // Methods
 const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
-  if(sectionId === 'portfolio'){
+  if (sectionId === 'portfolio') {
+    // Navigate to portfolio page
     router.push('/success-stories')
-  } else {
-  if (element) {
-    element.scrollIntoView({ 
-      behavior: 'smooth',
-      block: 'start'
-    })
+    return
   }
+
+  // Check if we're currently on the home page
+  if (route.path === '/') {
+    // If on home page, just scroll to the section
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }
+  } else {
+    // If not on home page, navigate to home first, then scroll
+    router.push('/').then(() => {
+      // Use nextTick to ensure the DOM has updated after navigation
+      nextTick(() => {
+        setTimeout(() => {
+          const element = document.getElementById(sectionId)
+          if (element) {
+            element.scrollIntoView({ 
+              behavior: 'smooth',
+              block: 'start'
+            })
+          }
+        }, 100) // Small delay to ensure page has loaded
+      })
+    })
   }
 }
 
